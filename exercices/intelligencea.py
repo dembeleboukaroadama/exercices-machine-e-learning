@@ -67,7 +67,18 @@ full_matrix=vectoriseur.fit_transform(dataset['full'].values.astype("U"))
 print(full_matrix.shape)
 
 
+from sklearn.model_selection import train_test_split
 
+x_train, x_test, y_train, y_test= train_test_split(full_matrix, dataset['approbation'], test_size=0.2, random_state=0)
+
+#autre maniere de creer le model de regression
+
+from sklearn.linear_model import Ridge
+
+reg=Ridge(alpha=.1)
+reg.fit(x_train,y_train)
+
+y_pre=reg.predict(x_test)
 
     
     
