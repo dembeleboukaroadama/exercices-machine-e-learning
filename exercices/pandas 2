@@ -1,0 +1,52 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jan 20 11:33:38 2020
+
+@author: Boukaro Adama
+"""
+import numpy as np
+from matplotlib import pyplot as plt
+import pandas as pd
+data.head()
+data=pd.read_csv('BTC-EUR.csv', index_col="Date", parse_dates=True) 
+"""ajouter les parametres des time series a la fonction read_csv"""
+
+data["2019"]['Adj Close'].plot(figsize=(9,6)) """"volution du bitcoin en   2019"""
+data["2019-09"]['Adj Close'].plot(figsize=(9,6)) """"volution du bitcoin en septembre 2019"""
+data["2017":"2019"]['Adj Close'].plot()""""volution du bitcoin entre 2017 et   2019"""
+
+""" les fonction resample permet de rassembler les données selon la frequence temporelle"""
+
+.resample("W").plot() """regouper les donnees en fonction de la semaine"""
+data["2019"]['Adj Close'].resample("M").mean().plot() """calculer la moyenne en fonction des mois """
+data["2019"]['Adj Close'].resample("2W").std().plot() """ecart type chaque semaine"""
+
+m=data['Adj Close'].resample('W').agg(["min","max","std","mean"])
+plt.figure(figsize=(6,4))
+
+"""la fonction rolling() permet de calculer les moyenne mobiles"""
+"""la fonction EWM() permet de calculer les moyenne mobiles exponentielles, le parametre alpha precise 
+la mamnière dont les donnees perdent leur valeur dans le temps"""
+
+data["2019-09"].rolling(window=7).mean().plot()
+data["2019-09"].rolling(window=7, center=True).mean().plot()
+data["2019-09"].ewm(alpha=0.75).mean().plot()
+data["2019-09"].ewm(alpha=0.75).std().plot()
+data["2019-09"].ewm(alpha=0.75).var().plot()
+
+m["mean"]["2019"].plot(label="la moyenne")
+plt.fill_between(m.index,m["max"], m["min"], alpha=0.2, label="min-max")
+plt.legend()
+plt.show()
+
+data["2019"]['Adj Close'].diff().plot() """voir les variations"""
+
+
+"""le  broascasring consiste à etendre les dimensions du tableau"""
+
+
+
+
+
+ 
+
