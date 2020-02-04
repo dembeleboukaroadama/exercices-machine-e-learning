@@ -1,0 +1,339 @@
+ # -*- coding: utf-8 -*-
+"""
+Created on Mon Jan 13 10:35:13 2020
+
+@author: Boukaro Adama
+"""
+
+import numpy as np 
+from matplotlib import pyplot as plt
+import pandas as pd
+
+
+"""kla fonction loc agit sur les collonnes par contre iloc localise les index"""
+prod=pd.read_excel("2014-2015-stocks-a-la-production-au-commerce.xls", skiprows=12, parse_cols="B:F")
+prod.index.name="departements"
+prod.info()
+prod.describe()
+prod.iloc[2,:]
+prod.isnull()
+prod.dropna() #supprime les ligne avec les valeurs nan
+
+prod[prod["Rouge"] >200000].sort_values("Rouge",ascending=[False])#faire une compaiso, suivie d(un tri
+prod.mean()     #la moyenne de chaue collone
+prod.mean(1)    #on peut preciser l'axe du calcul
+prod.corr()     #la matrice 
+prod.count()    #le nommbre de chaque
+prod.columns    #le colonnes
+prod.dtypes
+print(prod[["Blanc","Rosé"]]) #acceder à la valeur des collonnes
+masque=prod['Rouge']>261167.48 #creer un masque
+print(prod[masque]) #acceder aux elements àtravers le masque
+print(prod[~masque]) #donnees hors de masque
+
+prod.Rosé.unique() #retourner les valeurs uniques
+prod.describe(include="all")
+
+#apliquer une fonction aux elements du dataframe
+f = lambda x: x+1
+x=x.apply(lambda x: x+225)
+
+prod.rename(index=f)
+prod 
+
+prod['Rosé'] +=255
+#slicing
+prod=prod.rename(columns={'Unnamed: 0':"nom"})
+prod.iloc[0:10,0:3]
+#boolean slicing
+prod[prod.Rosé<301.0]
+
+prod[prod['Rosé'].isin([255.00,264.15])]
+
+#ajouter la colonne pays
+prod['pays']="France"
+#supprmer la colonne pays
+prod.drop(columns=["pays"])
+"pour supprimer une ligne prod.drop(localisation de la ligne)"
+ #voir les valeurs nan
+pd.isna(prod)
+#remplacer les valeurs nan par 5
+prod.fillna(value=5)
+
+
+
+
+import pandas as pd
+
+dates=pd.date_range('20200101', periods=6)
+dates
+
+#creer un dataframe à la main
+
+df2 = pd.DataFrame({"A":2,
+             "B": np.random.randint(0,5),
+             "C":pd.Series(index=list(range(4)), dtype='int32'),
+             "D":pd.Categorical(["Damo","Dembele","Damo","Dembele"]),
+             "E":"foot"
+             })
+
+#df2.to_numpy()
+
+df2.describe()
+
+
+%matplotlib inline
+import numpy as np 
+from matplotlib import pyplot as plt
+import pandas as pd
+
+population = {'California': 38332521,
+                   'Texas': 26448193,
+                   'New York': 19651127,
+                   'Florida': 19552860,
+                   'Illinois': 12882135,
+                   "Abidjan":8566485,
+                   "Bouake": 5000252}
+
+
+
+quartier = {'California': 35,
+                   'Texas': 35,
+                   'New York': 45,
+                   'Florida': 48,
+                   'Illinois': 52,
+                   "Abidjan":20,
+                   "Bouake": 15}
+
+df1=pd.DataFrame({"Quartier": quartier})
+df1.index.name="departements"
+df1
+
+df2 = pd.DataFrame({'population': population})
+#utiliser une colonne comme index
+df2.index.name="departements"
+df1
+
+df=pd.merge(df1, df2, on="departements")
+
+df.rename(columns={'population':"nombre d'habitants"}) #renommer la colunne populations 
+
+df
+pron=df.describe()
+
+#mean()  la moyenne 
+#std() l'acart type
+#max() le maximun
+#min() le minimum
+#count() le nombre de ligne
+#var() la variance
+
+df.agg(['mean','sum'])
+var=df.agg({'Quartier': 'sum', 'population': 'mean'})
+"aggreagte fait la meme chose que apply mais avec lui on peut passer plusierus fonvtion en parametre"
+
+df['population'].mean()
+
+"la methode align permet d'aligner deux dataframe" 
+df=df1.align(df2, join="outer")
+df=df1.align(df2, join="inner")
+df=df1.align(df2, join="left")
+df=df1.align(df2, join="right")
+
+np.corrcoef(df) #cree une matrice de correlation
+np.unique(df, return_counts=True)
+
+"pour faire les calculs en ignorant les nan, on fait np.nanmean()"
+np.size(df) #la taiille de dataset
+ 
+np.isnan(df).sum() #les valeurs nan
+
+
+#iteration
+for col in df:
+    print(col)
+    
+for row_index, row in df.iterrows():
+    print(row_index, row, sep='\n')
+
+for label, ser in df.items():
+    print(label)
+    print(ser)
+
+"generer une serie de dates successifs, le parmetre periods precise le nombre de date dans ton tableau"
+    
+s = pd.Series(pd.timedelta_range('20130101 09:10:12', periods=6, freq="s"))
+s
+
+s.dt.strftime('%Y/%m/%d') #♠donner un format a la date
+s.dt.year #afficher l"annee
+s.dt.day #affiche le numero dzs jours
+s.dt.month #affiche le numero du mois
+s = pd.Series(pd.timedelta_range('1 day 00:00:05', periods=4,freq='s'))
+s.dt.components "cette methode marche seulement avec timedelta_range et affiche tout les parametre de date"
+
+#le tri
+ 
+df.sort_index(ascending=False) #faire un tri decroissant avec l'index
+df['Quartier'].sort_index()
+df.sort_values(by="Quartier",ascending=False ) #faire le tri par la colonne quartier
+df.sort_values(by=["Quartier","population"],ascending=False )
+
+"aucune methode pandas ne modifie la donnee, elles creent tous un nouvel objet"
+
+"avec bump"
+
+np.ptp(df, axis=1)
+np.percentile(df, 5, axis=1) "Calculer le qème centile des données le long de l'axe spécifié"
+
+arr=np.random.randint(0,10,[10,10])
+arr=np.random.randint(0,10,[10,2])
+arr
+np.median(df, axis=0)
+np.median(arr, axis=1) "Calcule la médiane le long de l'axe spécifié." 
+np.average(arr, axis=1,  weights=None)  "Calcule la moyenne le long de l'axe(0:ordonnees, 1:abscisses) spécifié."
+np.mean(arr, axis=1)  "Calculez la moyenne arithmétique le long de l'axe spécifié."
+np.var(arr, axis=0, dtype="int32")
+np.corrcoef(arr)
+#♥np.correlate(arr)
+np.cov(arr) "Estimer une matrice de covariance, compte tenu des données"
+
+"visualiser les donnees"
+
+np.histogram(arr, bins=10) "Calculez l'histogramme d'un ensemble de données."
+
+from matplotlib import pyplot as plt
+plt.plot(df)
+
+df=df.T #transposer le dataframe
+
+df.to_string() #une représentation sous forme de chaîne du DataFrame sous forme de tableau
+
+df.sample(n=5, replace=True) 
+df.sample(frac=0.9) 
+df.groupby('Quartier').agg({'Quartier':'mean'})
+
+"""REALISER LES OPERATIONS DE BASE SQL AVEC PANDAS"""
+
+url = ('https://raw.github.com/pandas-dev'
+       '/pandas/master/pandas/tests/data/tips.csv')
+
+tips=pd.read_csv(url)
+tips
+
+"""LES SELECT """
+tips.head() #les 5premiers elements
+tips.tail() #avec tail on precise le nombre de ligne qu'on souhaite affiche
+tips[['total_bill', 'tip', 'smoker', 'time']].head(5)
+
+"""LES WHERE"""
+tips[tips['total_bill']>50]
+tips[(tips['tip']==3.00) & (tips['total_bill']>20)]
+tips[(tips['tip']==np.nan)]
+
+data.groupby(['sex']).sum()
+data.groupby('tip').sum()
+tips.groupby('day').agg({'tip': np.mean, 'day': np.size})
+tips.groupby(['smoker','day']).agg({'tip':[np.size, np.mean]})
+
+"""l'union avec la command df.concat, merge pour la jointure, il faut preciser 
+le champ que les deux dataset ont en commun grace a l'attribut on, l'attribut how prend les valeurs(inner, left, right
+,outer) precise la maniere dont la jointure sera faite"""
+
+tips.nlargest(10 + 5, columns='tip').tail(10)
+tips.loc[tips['tip'] < 2, 'tip'] *= 2
+
+"TRI"
+firstlast = pd.DataFrame({'String': ['John Smith', 'Jane Cook']})
+tips.sort_values(['tip','total_bill' ])
+
+"LA LONGUEUR DES STRINGS"
+tips['time'].str.len().tail(5)
+tips['time'].str.rstrip().str.len().tail(5)
+
+tips['time'].str[0:3].tail(5)
+firstlast['first_name']= firstlast['String'].str.split(" ", expand=True)[0]
+firstlast['last_name']= firstlast['String'].str.rsplit(" ", expand=True)[0]
+firstlast['String'].str.upper()
+firstlast['String'].str.lower()
+
+"""exporter les donnees dans un fichier csv
+pandas fournit une méthode read_sas () qui peut lire les données SAS enregistrées 
+au format binaire XPORT ou SAS7BDAT"""
+
+df = pd.read_sas('transport-file.xpt', format='xport') """on ajout le format"""
+df = pd.read_sas('binary-file.sas7bdat')
+
+df.to_csv('pop.csv')
+tips.to_csv('tips2.csv')
+
+""" on peut exporter les fichier en plusieurs formts
+
+Format
+Type
+Data Description Reader Writer
+text CSV read_csv to_csv
+text JSON read_json to_json
+text HTML read_html to_html
+text Local clipboard read_clipboard to_clipboard
+binary MS Excel read_excel to_excel
+binary OpenDocument read_excel
+binary HDF5 Format read_hdf to_hdf
+binary Feather Format read_feather to_feather
+binary Parquet Format read_parquet to_parquet
+binary Msgpack read_msgpack to_msgpack
+binary Stata read_stata to_stata
+binary SAS read_sas
+binary Python Pickle Format read_pickle to_pickle
+SQL SQL read_sql to_sql
+SQL Google Big Query read_gbq to_gbq
+Here is an informal performance comparison for some of these IO methods
+
+"""
+
+
+import pandas as pd
+data=pd.read_csv('tips2.csv') 
+
+data.head()
+
+data.columns
+data=data.drop(['Unnamed: 0' ], axis=1)
+data['day'].value_counts().plot.bar()
+
+data.groupby(['day']).mean()
+
+data.index.name="day"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
